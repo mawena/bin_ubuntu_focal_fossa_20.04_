@@ -1,0 +1,58 @@
+#!/bin/python3
+import urllib.request, os.path
+#1-Chargement des données externe dans le script:
+#Lecture du fichiers contenant les informations sur les scans
+with open("/home/mawena/bin/.mangadown/scan_compress.md", "r") as file:
+    file_text=file.read()   #On écrit le contenu du fichier dans une variable
+manga_list_list,start,end=[],1,1
+
+#2-Demande des informations postcompréssion et gestion de ses bugs:
+print("Liste(s) de(s) manga(s):")
+for line in file_text.split("\n"):  #Boucle de lecture de fichier de configuration
+    manga_list_list.append(line.split("] : ["))  #On met les informations sur un manga dans une liste
+    manga_list_list[-1][0],manga_list_list[-1][-1]=manga_list_list[-1][0][1:],manga_list_list[-1][-1][:-1]   #On éfface le premier caractère de la première chaîne de caractères et le dernier caractère de la dernière chaîne de caractères
+    print(str(len(manga_list_list))+"-"+manga_list_list[-1][0])
+print("\nEtape1: Choix de(s) manga(s):")
+while(True):    #Boucle de vérification des données entrantes
+    manga_num_list, errors=input("Entrez le(s) numéro(s) de manga(s) à convertir (séparé par des espaces):").split(" "), []
+    for manga_num in manga_num_list:
+        try:
+            manga_num = int(manga_num)-1
+            if(manga_num<0 or manga_num> len(manga_list_list)-1):
+                errors.append(manga_num)
+                print("Veuillez entrer des nombres compris entre 1 et "+str(len(manga_list_list))+"\n")
+        except TypeError:
+            errors.append(manga_num)
+            print("Veuillez entrer des entiers compris entre 1 et "+str(len(manga_list_list))+"\n")
+        except ValueError:
+            errors.append(manga_num)
+            print("Veuillez entrer des entiers compris entre 1 et "+str(len(manga_list_list))+"\n")
+    if(len(errors) == 0):
+        break
+
+#3-Compréssion des images:
+print("\nEtape2: Compréssions:")
+for manga_num in manga_num_list:    #Boucle de compréssion des images
+    manga_num = int(manga_num)-1
+    nom,image_path,pdf_path,pdf_name = manga_list_list[manga_num]    #Definition des variables après lecture des informations
+    chapitre_list=os.listdir(image_path)
+    for chapitre in chapitre_list:
+        if os.path.exists(pdf_path) == False:
+            os.makedirs(pdf_path)  #On crée le dossier de destination du pdf
+            print("Création du dossier"+pdf_path)
+        print("["+image_path+chapitre+"/*] C=> ["+pdf_path+pdf_name+chapitre+".pdf]")
+        os.system("convert -compress jpeg "+image_path+chapitre+"/* "+pdf_path+pdf_name+chapitre+".pdf")
+
+print("\nEtape3: Gestion des images:")
+for manga_num in manga_num_list:    #Boucle de gestion des images après compression
+    manga_num = int(manga_num)-1
+    nom,image_path,pdf_path,pdf_name = manga_list_list[manga_num]    #Definition des variables après lecture des informations
+    chapitre_list=os.listdir(image_path)
+    for chapitre in chapitre_list:
+        #Gestion des images après convertion #BYMawena
+        rep=""
+        while(rep != "o" and rep != "n"):
+            rep = input("Suprimer les images du chapitre "+chapitre+" de "+manga_list_list[manga_num][0]+"?(o/n)")
+        if rep == "o":
+            os.system("rm -r "+image_path+chapitre)
+#BYMawena
