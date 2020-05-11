@@ -1,0 +1,30 @@
+#!/bin/python3
+import os
+import sys
+paths=[]
+if len(sys.argv) > 1:	#Si on a plusieurs paramètres
+	i = 1
+	while i < len(sys.argv):
+		paths.append("'"+os.path.abspath(sys.argv[i])+"'")	#On les convertit en chemin absolu
+		i+=1
+else:	#Si non le chemin par défaut est le dossier courant
+	paths = ["'"+os.getcwd()+"'"]
+
+for path in paths:
+	for i in range(1, 5):
+		os.system("mkdir "+path+"/Partie0"+str(i))
+		for j in range(1, 6):
+			os.system("touch "+path+"/Partie0"+str(i)+"/"+str(j)+"-.txt")
+			os.system('echo """'+"""Partie0"""+str(i)+""":
+	Chapitre0"""+str(j)+""":
+
+							/1/-Notes importantes:
+	#
+
+							/2/-Supléments et infos:
+	-
+
+											#BY MAWENA
+
+	"""+'""" >> '+path+"/Partie0"+str(i)+"/"+str(j)+"-.txt")
+
