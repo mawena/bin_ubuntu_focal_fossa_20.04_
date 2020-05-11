@@ -1,3 +1,4 @@
+#!/bin/python3
 import os
 for i in range(1, 5):
 	os.system("mkdir Partie0"+str(i))
