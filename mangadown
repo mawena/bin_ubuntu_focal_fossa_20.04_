@@ -1,18 +1,24 @@
 #!/bin/python3
-import urllib3, os.path
+import urllib3, os
 connection_pool=urllib3.PoolManager()
+
 #1-Chargement des données externe dans le script:
+#--------------------------------------------------------------------------#
 #Lecture du fichiers contenant les informations sur les scans
 with open("/home/mawena/bin/.mangadown/scan_down.md", "r") as file:
     file_text=file.read()
 manga_list,start,end=[],1,1
+os.system("clear")
 print("Liste des mangas:")
 for line in file_text.split("\n"):
     manga_list.append(line.split("] : ["))
     manga_list[-1][0],manga_list[-1][-1]=manga_list[-1][0][1:],manga_list[-1][-1][:-1]   #On éfface le premier caractère de la première chaîne de caractères et le dernier caractère de la dernière chaîne de caractères
     print(str(len(manga_list))+"-"+manga_list[-1][0]) #On affiche le nom du scan
+#--------------------------------------------------------------------------#
+
 
 #2-Demande et vérification des informations de téléchargement:
+#--------------------------------------------------------------------------#
 #Gestion du numéro de manga et ses bugs:
 while(True):
     try:
@@ -25,26 +31,84 @@ while(True):
         print("Veuillez entrer un entier compris entre 1 et "+str(len(manga_list))+"\n")
     except ValueError:
         print("Veuillez entrer un entier compris entre 1 et "+str(len(manga_list))+"\n")
+os.system("clear")
 
-nom,url,scan_path,extensions,nbre_zero,lang = manga_list[manga_num]    #Definition de variable après lecture des informations
-nbre_zero=int(nbre_zero)
-#Gestion des chapitres et ses bugs:
+#Definition des variables
+nom,url,scan_path,extensions,nbre_zeros,langs = manga_list[manga_num]    #Definition de variable après lecture des informations
+nbre_zeros, langs, comp =nbre_zeros.split("*"), langs.split("*"), 1
+
+#Gestion de la version:
+if(len(langs) > 1):
+    print("Versions:")
+    for choice in langs:
+        print(str(comp)+"-"+choice)
+        comp+=1
+    comp=1
+    while(True):
+        try:
+            lang = langs[(int(input("quel est le numéro de la version à télécharger?:")))-1]
+            if(langs.__contains__(lang)):
+                break
+            else:
+                print("Veuillez entrer un nombre compris entre 1 et "+str(len(langs)))
+        except TypeError:
+            print("Veuillez entrer un entier compris entre 1 et "+str(len(langs))+"\n")
+        except ValueError:
+            print("Veuillez entrer un entier compris entre 1 et "+str(len(langs))+"\n")
+        except IndexError:
+            print("Veuillez entrer un entier compris entre 1 et "+str(len(langs))+"\n")
+else:
+    lang = langs[0]
+os.system("clear")
+
+#Gestion de la nomenclature des images:
+if(len(nbre_zeros) > 1):
+    print("Nombre de zéro sur dans le nom des images:")
+    for choice in nbre_zeros:
+        print(str(comp)+"-"+choice)
+        comp+=1
+    comp=1
+    while(True):
+        try:
+            nbre_zero = nbre_zeros[(int(input("quel est le numéro de vôtre choix?:")))-1]
+            if(nbre_zeros.__contains__(nbre_zero)):
+                break
+            else:
+                print("Veuillez entrer un nombre compris entre 1 et "+str(len(nbre_zeros)))
+        except TypeError:
+            print("Veuillez entrer un entier compris entre 1 et "+str(len(nbre_zeros))+"\n")
+        except ValueError:
+            print("Veuillez entrer un entier compris entre 1 et "+str(len(nbre_zeros))+"\n")
+        except IndexError:
+            print("Veuillez entrer un entier compris entre 1 et "+str(len(nbre_zeros))+"\n")
+else:
+    nbre_zero = nbre_zeros[0]
+nbre_zero = int(nbre_zero)
+os.system("clear")
+
+# Gestion des chapitres et ses bugs:
 while(True):
     try:
-        start,end=input("Entrez les chapitres de comencement et de fin séparés par un espace:").split(" ")
-        start,end=int(start),int(end)
-        if(start<0 or end<1):
-            print("Les chapitres doivent êtres supérieures à 0\n")
+        entre=input("Entrez le(s) chapitre(s) de comencement (et de fin séparés par un espace):").split(" ")
+        if(len(entre) == 1):
+            start, end=int(entre[0]), int(entre[0])
+        else:
+            start, end= int(entre[0]), int(entre[1])
+
+        if(start<0 or end<0):
+            print("Les chapitres doivent êtres supérieures ou égal à 0\n")
         elif(start>end):
             print("Le chapitre de début doit être inférieur à celui de fin\n")
         else:
             break
     except TypeError:
         print("Les chapitres doivent être des entiers\n")
-    except ValueError:
-        print("Vous devez entrez deux Entiers séparées par un espace\n")
+os.system("clear")
+#--------------------------------------------------------------------------#
+
 
 #3-Traitement des données et lancement des téléchargements
+#--------------------------------------------------------------------------#
 for chapitre in range(start,end+1):
     if(chapitre <= 9):
         more = "00"
@@ -79,7 +143,7 @@ for chapitre in range(start,end+1):
             else:   #Sinon
                 resp = connection_pool.request('GET', image_url)
                 if(resp.status == 404):
-                    if i > 20:
+                    if i > 20:  #Si on a une erreur 404 et que le numéro de l'image est supérieur à 20
                         break
                     else:
                         pass
@@ -88,6 +152,8 @@ for chapitre in range(start,end+1):
                     f.write(resp.data)
                     f.close()
                     resp.release_conn()
-                    print("\n["+image_url+"] => ["+image_path+"]")
+                    print("["+image_url+"] => ["+image_path+"]")
             i+=1
-#BYMawena
+    os.system("clear")
+#--------------------------------------------------------------------------#
+#BY MAWENA
