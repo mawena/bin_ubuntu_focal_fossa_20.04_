@@ -2,7 +2,7 @@
 import os
 import sys
 paths=[]
-if len(sys.argv) > 1:	#Si on a plusieurs paramètres
+if len(sys.argv) > 1:	#Si on a un ou plusieurs paramètres
 	i = 1
 	while i < len(sys.argv):
 		paths.append("'"+os.path.abspath(sys.argv[i])+"'")	#On les convertit en chemin absolu
