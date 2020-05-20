@@ -142,6 +142,7 @@ for chapitre in range(start,end+1):
                 print("\n["+image_path+"] existe déja")
             else:   #Sinon
                 resp = connection_pool.request('GET', image_url)
+                #print(image_url)
                 if(resp.status == 404):
                     if i > 20:  #Si on a une erreur 404 et que le numéro de l'image est supérieur à 20
                         break
