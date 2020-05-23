@@ -1,0 +1,18 @@
+#!/bin/php
+<?php
+require("Library/autoload.php");
+use Library\FilesManager;
+use Library\Managers;
+use Library\PDOFactory;
+$path="/home/mawena/bin/Videos/";
+$pathSave="/var/www/html/Repository/ottackuAttack/Web/videos/Musique";
+$extentions=array("mp4", "mkv", "webm");
+$undesirables=array("1080" => "", "_" => " ");
+$filesManager = new FilesManager;
+$managers = new Managers('PDO', PDOFactory::getMysqlConnexion());
+$managerVideos = $managers->getManagerOf('Videos');
+
+
+$filesManager->fileFame($path, $extentions, $undesirables, $managerVideos->getAllArtistes());
+$artistes = $filesManager->tree2($path, $extentions);
+$filesManager->upload($artistes, $managerVideos, $path, $pathSave);

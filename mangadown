@@ -137,12 +137,11 @@ for chapitre in range(start,end+1):
 
             image_url=url+chapitre+lang+"/"+image+extension #On crée l'url de téléchargement de l'image
             image_path=scan_path+more+chapitre+lang+"/"+image+extension  #On crée le chemin de sauvegarde de l'image
-            # print(image_path)
             if os.path.exists(image_path):   #Si le fichier existe déja
                 print("\n["+image_path+"] existe déja")
             else:   #Sinon
                 resp = connection_pool.request('GET', image_url)
-                #print(image_url)
+                # print(image_url)
                 if(resp.status == 404):
                     if i > 20:  #Si on a une erreur 404 et que le numéro de l'image est supérieur à 20
                         break
