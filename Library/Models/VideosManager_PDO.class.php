@@ -50,7 +50,7 @@ class VideosManager_PDO extends VideosManager{
 
     public function add(Video $video){
         $q = $this->dao->prepare("INSERT INTO Videos set nom = :nom, artiste = :artiste, extention = :extention, dateAjout = NOW()");
-        $q->bindValue(":nom", $video->nom(), \PDO::PARAM_INT);
+        $q->bindValue(":nom", $video->nom());
         $q->bindValue(":artiste", $video->artiste());
         $q->bindValue(":extention", $video->extention());
         $q->execute();

@@ -12,7 +12,7 @@ class Managers{
             throw new \InvalidArgumentException('Le module spécifié est invalide');
         }
         if(!isset($this->managers[$module])){   //Si le module n'existe pas
-            $manager = 'Library\\Models\\'.$module.'Manager_'.$this->api; //Important du bon module en fonction de son nom et du nom de l'api
+            $manager = '\\Library\\Models\\'.$module.'Manager_'.$this->api; //Important du bon module en fonction de son nom et du nom de l'api
             $this->managers[$module] = new $manager($this->dao);
         }
         return $this->managers[$module];

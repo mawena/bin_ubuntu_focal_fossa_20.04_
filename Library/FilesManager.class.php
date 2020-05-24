@@ -61,8 +61,9 @@ class FilesManager{
      * @return void
      */
     public function fileFame(string $path, array $extensions, array $undesirables, array $elements){
-        $answer=strtolower(readline("Ce programme va modifier vos fichiers sans retour possible, êtes vous sur de vouloir continuer?(yes/no):"));
+        $answer=strtolower(readline("Ce programme va modifier vos fichiers sans retour possible, êtes vous sur de vouloir continuer le rangement?(yes/no):"));
         if($answer[0] == "y"){
+            echo "Renomage et rangement des fichiers\n";
             $path = $this->slasher($path);
             foreach ($extensions as $extension){
                 foreach(glob($path."*".$extension) as $pathFind){
@@ -124,19 +125,37 @@ class FilesManager{
             return $files;
         }
     }
-
-    public function upload(array $artistes, Manager $manager, string $path, $pathSave){
+    
+    /**
+     * Upload elements
+     *
+     * @param array $artistes
+     * @param Manager $manager
+     * @param string $path
+     * @param string $pathSave
+     * @return void
+     */
+    public function upload(array $artistes, Manager $manager, string $path, string $pathSave){
         $pathSave = $this->slasher($pathSave);
-        foreach($artistes as $artiste => $elements){
-            (!is_dir($pathSave.$artiste)) ? mkdir($pathSave.$artiste) : null;
-            foreach ($elements as $extension => $tab){
-                foreach($tab as $element){
-                    $element = substr($element, 0, strlen($element)-strlen($extension)-1);
-                    // ($manager->count($element))? null : $manager->add(new Video(array("nom" => $element, "extention" => $extension, "artiste" => $artiste)));   //Ajout à la bdd
-                    rename($path.$artiste."/".$element.".".$extension, $pathSave.$artiste."/".$element.".".$extension);    //Déplacement
-                    echo $path.$artiste."/".$element.".".$extension." => ".$pathSave.$artiste."/".$element.".".$extension."\n";
+        
+        echo "Upload des fichiers\n";
+        $answer=strtolower(readline("Ce programme va modifier vos fichiers sans retour possible, êtes vous sur de vouloir continuer l'upload?(yes/no):"));
+        if($answer[0] == "y"){
+            foreach($artistes as $artiste => $elements){
+                (!is_dir($pathSave.$artiste)) ? mkdir($pathSave.$artiste) : null;
+                foreach ($elements as $extension => $tab){
+                    foreach($tab as $element){
+                        $element = substr($element, 0, strlen($element)-strlen($extension)-1);
+                        $test = new Video(array("nom" => $element, "extention" => $extension, "artiste" => $artiste));
+                        ($manager->count($element))? null : $manager->add(new Video(array("nom" => $element, "extention" => $extension, "artiste" => $artiste)));   //Ajout à la bdd
+                        rename($path.$artiste."/".$element.".".$extension, $pathSave.$artiste."/".$element.".".$extension);    //Déplacement
+                        echo $path.$artiste."/".$element.".".$extension." => ".$pathSave.$artiste."/".$element.".".$extension."\n";
+                        (glob($this->slasher($path.$artiste)."*")) ? null : rmdir($path.$artiste);
+                    }
                 }
             }
         }
     }
 }
+
+                                        #BY MAWENA
