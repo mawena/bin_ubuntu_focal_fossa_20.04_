@@ -1,18 +1,13 @@
 #!/bin/python3
 import urllib.request, os.path
-#1-Chargement des données externe dans le script:
-#Lecture du fichiers contenant les informations sur les scans
-with open("/home/mawena/bin/.mangadown/scan_compress.md", "r") as file:
-    file_text=file.read()   #On écrit le contenu du fichier dans une variable
+os.system("clear")
 manga_list_list,start,end=[],1,1
-
-#2-Demande des informations postcompréssion et gestion de ses bugs:
-print("Liste(s) de(s) manga(s):")
-for line in file_text.split("\n"):  #Boucle de lecture de fichier de configuration
-    manga_list_list.append(line.split("] : ["))  #On met les informations sur un manga dans une liste
-    manga_list_list[-1][0],manga_list_list[-1][-1]=manga_list_list[-1][0][1:],manga_list_list[-1][-1][:-1]   #On éfface le premier caractère de la première chaîne de caractères et le dernier caractère de la dernière chaîne de caractères
+imagesPath = "/media/mawena/Files/Files/Documents/Divertissements/scan/"
+for name in os.listdir(imagesPath):
+    manga_list_list.append([name, "{0}{1}/jpg/".format(imagesPath, name), "{0}{1}/pdf/".format(imagesPath, name), "{0}_".format(name)])
     print(str(len(manga_list_list))+"-"+manga_list_list[-1][0])
-print("\nEtape1: Choix de(s) manga(s):")
+print("Liste(s) de(s) manga(s):\nEtape1: Choix de(s) manga(s):")
+
 while(True):    #Boucle de vérification des données entrantes
     manga_num_list, errors=input("Entrez le(s) numéro(s) de manga(s) à convertir (séparé par des espaces):").split(" "), []
     for manga_num in manga_num_list:

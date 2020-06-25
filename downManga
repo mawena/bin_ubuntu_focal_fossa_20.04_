@@ -34,8 +34,8 @@ while(True):
 os.system("clear")
 
 #Definition des variables
-nom,url,scan_path,extensions,nbre_zeros,langs = manga_list[manga_num]    #Definition de variable après lecture des informations
-nbre_zeros, langs, comp =nbre_zeros.split("*"), langs.split("*"), 1
+nom,url,scan_path,extensions,langs = manga_list[manga_num]    #Definition de variable après lecture des informations
+langs, comp =langs.split("*"), 1
 
 #Gestion de la version:
 if(len(langs) > 1):
@@ -59,40 +59,30 @@ if(len(langs) > 1):
             print("Veuillez entrer un entier compris entre 1 et "+str(len(langs))+"\n")
 else:
     lang = langs[0]
-os.system("clear")
 
 #Gestion de la nomenclature des images:
-if(len(nbre_zeros) > 1):
-    print("Nombre de zéro sur dans le nom des images:")
-    for choice in nbre_zeros:
-        print(str(comp)+"-"+choice)
-        comp+=1
-    comp=1
-    while(True):
-        try:
-            nbre_zero = nbre_zeros[(int(input("quel est le numéro de vôtre choix?:")))-1]
-            if(nbre_zeros.__contains__(nbre_zero)):
-                break
-            else:
-                print("Veuillez entrer un nombre compris entre 1 et "+str(len(nbre_zeros)))
-        except TypeError:
-            print("Veuillez entrer un entier compris entre 1 et "+str(len(nbre_zeros))+"\n")
-        except ValueError:
-            print("Veuillez entrer un entier compris entre 1 et "+str(len(nbre_zeros))+"\n")
-        except IndexError:
-            print("Veuillez entrer un entier compris entre 1 et "+str(len(nbre_zeros))+"\n")
-else:
-    nbre_zero = nbre_zeros[0]
-nbre_zero = int(nbre_zero)
-os.system("clear")
+while(True):
+    try:
+        nbre_nbre = (int(input("Le nom des images contient combien de nombre au minimum?:")))
+    except TypeError:
+        print("Veuillez entrer un entier\n")
+    except ValueError:
+        print("Veuillez entrer un entier\n")
+    break
 
 # Gestion des chapitres et ses bugs:
 while(True):
     try:
         entre=input("Entrez le(s) chapitre(s) de comencement (et de fin séparés par un espace):").split(" ")
         if(len(entre) == 1):
-            start, end=int(entre[0]), int(entre[0])
+            if(entre[0] == ""):
+                withoutChapter=True
+                start, end=0, 1
+            else:
+                withoutChapter=False
+                start, end=int(entre[0]), int(entre[0])
         else:
+            withoutChapter=False
             start, end= int(entre[0]), int(entre[1])
 
         if(start<0 or end<0):
@@ -110,13 +100,16 @@ os.system("clear")
 #3-Traitement des données et lancement des téléchargements
 #--------------------------------------------------------------------------#
 for chapitre in range(start,end+1):
-    if(chapitre <= 9):
-        more = "00"
-    elif(chapitre <= 99):
-        more = "0"
+    if(withoutChapter):
+        chapitre,more="",nom
     else:
-        more = ""
-    chapitre=str(chapitre)  #On convertie le chapitre en chaine de caractère
+        if(chapitre <= 9):
+            more = "00"
+        elif(chapitre <= 99):
+            more = "0"
+        else:
+            more = ""
+        chapitre=str(chapitre)  #On convertie le chapitre en chaine de caractère
 
     #Gestion du dossier de chapitre:
     if os.path.exists(scan_path+more+chapitre+lang) == False:
@@ -125,15 +118,12 @@ for chapitre in range(start,end+1):
 
     #Gestion du téléchargement des images:
     for extension in extensions.split("*"):    #On utilise les différentes extensions
-        i=0
+        i=1
         while(True):
-            if nbre_zero == 0:
-                image = str(i)
-            elif nbre_zero > 0:
-                image = ""
-                for j in range(0, nbre_zero):
-                    image+="0"
-                image = (image+str(i))[len(image+str(i))-nbre_zero-1:]
+            nbre_zero, image = nbre_nbre-len(str(i)),""
+            for j in range(0, nbre_zero):
+                image+="0"
+            image = image+str(i)
 
             image_url=url+chapitre+lang+"/"+image+extension #On crée l'url de téléchargement de l'image
             image_path=scan_path+more+chapitre+lang+"/"+image+extension  #On crée le chemin de sauvegarde de l'image
@@ -141,8 +131,8 @@ for chapitre in range(start,end+1):
                 print("\n["+image_path+"] existe déja")
             else:   #Sinon
                 resp = connection_pool.request('GET', image_url)
-                # print(image_url)
                 if(resp.status == 404):
+                    print("Le fichier "+image_url+" n'existe pas en ligne\n");
                     if i > 20:  #Si on a une erreur 404 et que le numéro de l'image est supérieur à 20
                         break
                     else:
@@ -156,4 +146,3 @@ for chapitre in range(start,end+1):
             i+=1
     os.system("clear")
 #--------------------------------------------------------------------------#
-#BY MAWENA

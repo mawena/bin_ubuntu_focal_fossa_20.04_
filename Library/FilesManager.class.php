@@ -10,7 +10,7 @@ class FilesManager{
     /**
      * Function to convert to absoule path
      *
-     * @param [string] $path
+     * @param mixte $path
      * @return string
      */
     public function slasher($path){

@@ -7,16 +7,21 @@ if len(sys.argv) > 1:	#Si on a un ou plusieurs paramètres
 	while i < len(sys.argv):
 		paths.append("'"+os.path.abspath(sys.argv[i])+"'")	#On les convertit en chemin absolu
 		i+=1
-else:	#Si non le chemin par défaut est le dossier courant
+else:	#Sinon le chemin par défaut est le dossier courant
 	paths = ["'"+os.getcwd()+"'"]
 
+Types=["Vidéo","Chapitre"]
+Type = Types[int(input("Vidéo(0) ou Chapitre(1)?:"))]
+nbPartie = int(input("Nombre de partie[int]:"))
+nbTxt = int(input("Nombre de fichier txt par partie[int]:"))
+
 for path in paths:
-	for i in range(1, 5):
-		os.system("mkdir "+path+"/Partie0"+str(i))
-		for j in range(1, 6):
-			os.system("touch "+path+"/Partie0"+str(i)+"/"+str(j)+"-.txt")
-			os.system('echo """'+"""Partie0"""+str(i)+""":
-Chapitre0"""+str(j)+""":
+	for i in range(1, nbPartie+1):
+		nomPartie=input("nom de la partie"+str(i)+":")
+		os.system("mkdir "+path+"/Partie"+str(i))
+		for j in range(1, nbTxt+1):
+			os.system("touch "+path+"/Partie"+str(i)+"/"+str(j)+"-.txt")
+			os.system('echo """Partie'+str(i)+': '+nomPartie+'\n'+Type+str(j)+""":
 
 						/1/-Notes importantes:
 #
@@ -25,6 +30,4 @@ Chapitre0"""+str(j)+""":
 -
 
 										#BY MAWENA
-
-"""+'""" >> '+path+"/Partie0"+str(i)+"/"+str(j)+"-.txt")
-
+"""+'""" >> '+path+"/Partie"+str(i)+"/"+str(j)+"-.txt")
