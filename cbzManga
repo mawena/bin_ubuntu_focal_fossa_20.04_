@@ -1,7 +1,7 @@
 #!/bin/python3
 import urllib.request, os.path
 os.system("clear")
-manga_list_list,start,end=[],1,1
+manga_list_list=[]
 imagesPath = "/media/mawena/Files/Files/Documents/Divertissements/scan/"
 for name in os.listdir(imagesPath):
     manga_list_list.append([name, "{0}{1}/jpg/".format(imagesPath, name), "{0}{1}/cbz/".format(imagesPath, name), "{0}_".format(name)])
