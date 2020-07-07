@@ -60,6 +60,7 @@ class VideosManager_PDO extends VideosManager{
     public function getAllArtistes(){
         $requete = $this->dao->query("SELECT DISTINCT `artiste`FROM `Videos` ORDER BY artiste");
         $ArtistesArray = $requete->fetchAll();
+        $artistesArray = [];
         foreach($ArtistesArray as $artiste){
             $artistesArray[] = $artiste['artiste'];
         }

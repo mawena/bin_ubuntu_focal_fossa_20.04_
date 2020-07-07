@@ -8,8 +8,8 @@ use Library\PDOFactory;
 $filesManager = new FilesManager;
 $managers = new Managers('PDO', PDOFactory::getMysqlConnexion());
 $managerVideos = $managers->getManagerOf('Videos');
-$pathSave="/var/www/html/Repository/ottackuAttack/Web/videos/Musique";
-$new_path = "/var/www/html/videos/New";
+$pathSave="/var/www/html/Data/videos/Musique/";
+$new_path = "/var/www/html/Data/videos/New/";
 $extentions=array("mp4", "mkv", "webm");
 $undesirables=array("1080" => "", "_" => " ", "(1) " => "", " (Clip Officiel) " => "", " (Clip officiel) " => "", "- YouTube" => "", "- Yo" => "", "- YouT" => "", " (Official Video)" => "", " (Official Music Vide" => "", "- YouTub" => "", " [Official Music Video] " => "", "[" => "", "]" => "", "{" => "", "}" => "", "(" => "", ")" => "", "(17) " => "", "(9) " => "", " (Official) " => "", "- Y" => "", " [OFFICIAL VIDEO] " => "", " (Official Music Video) " => "", " (Official Mus" => "", "- YouTu" => "", "- You" => "", "(OFFICIAL " => "",);
 
@@ -19,7 +19,7 @@ if($argc == 1){
 }
 elseif($argc > 1){
     for($i=0; $i<$argc-1; $i++){
-        $path_array[$i] = $filesManager->slasher($argv[i+1]);
+        $path_array[$i] = $filesManager->slasher($argv[$i+1]);
     }
 }
 
