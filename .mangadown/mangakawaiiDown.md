@@ -1,1 +1,0 @@
-[Ane_Doki] : [https://www.mangakawaii.com/manga/anedoki/1/]

@@ -1,14 +1,16 @@
 #!/bin/python3
-import urllib3, os, re
+import urllib3, os, re, pathlib
 connection_pool = urllib3.PoolManager()
 from mangaManagement.management import *
 from mangaManagement.download import *
 
+directory = pathlib.Path(__file__).parent
+print(directory)
+
 # Definitions de quelques variables
 scansPath, imagesType = "/media/mawena/Files/Files/Documents/Divertissements/scan/", "jpg"
 mdFilesList = [
-    "/home/mawena/bin/.mangadown/mangakakalotDown.md",
-    "/home/mawena/bin/.mangadown/mangakawaiiDown.md"
+    str(directory)+"/.mangadown/mangakakalotDown.md"
 ]
 sitesNameList = [
     getImagesLinksMangakakalot,
