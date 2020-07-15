@@ -1,15 +1,17 @@
 #!/bin/python3
-import urllib3, os
+import urllib3, os, pathlib
 connection_pool = urllib3.PoolManager()
 from mangaManagement.management import *
 from mangaManagement.download import *
 
 #Definitions de quelques variables
+directory = str(pathlib.Path(__file__).parent)
+creatDir(directory+"/scan/")
 extensions, langs, scansPath, imagesType = [".jpg", ".png"], [
     "", "raw", "va", "vf", "vus", "VUS"
-], "/media/mawena/Files/Files/Documents/Divertissements/scan/", "jpg"
+], directory+"/scan/", "jpg"
 mangaList = getMangaList(
-    ["/home/mawena/bin/.mangadown/scan_down.md"], scansPath,
+    [directory+"/.mangadown/scan_down.md"], scansPath,
     imagesType)  #On récupère le liste des mangas et leurs infos
 mangaNum = getMangaNum(
     mangaList)  #On récupère le numéro du manga à télécharger
@@ -29,24 +31,13 @@ nbreNombre = getNbreImage(
 )  #Le nombre de nombre mininum dans le numéro des images
 
 #Gestion des erreurs de dossier:
-if (os.path.exists(scansPath + Name) == False):
-    print(getWarning("Creation du dossier: [" + scansPath + Name + "]"))
-    os.makedirs(scansPath + Name)
-if (os.path.exists(scansPath + Name + "/" + imagesType) == False):
-    print(
-        getWarning("Creation du dossier: [" + scansPath + Name + "/" +
-                   imagesType + "]"))
-    os.makedirs(scansPath + Name + "/" + imagesType)
+creatDir(scansPath + Name)
+creatDir(scansPath + Name + "/" + imagesType)
 
 #Traitement des données et lancement des téléchargements:
 for chapitre, more in getChapterVars(Name):
     #Gestion du dossier de chapitre:
-    if (os.path.exists(scanPath + more + chapitre + lang) == False):
-        print(
-            getWarning("Creation du dossier: [" + scanPath + more + chapitre +
-                       lang + "]"))
-        os.makedirs(scanPath + more + chapitre +
-                    lang)  #Crée les dossiers de destination
+    creatDir(scanPath + more + chapitre + lang)
 
     #Gestion du téléchargement des images:
     for extension in extensions:  #On utilise les différentes extensions
@@ -59,10 +50,6 @@ for chapitre, more in getChapterVars(Name):
 
             imageUrl = url + chapitre + lang + "/" + image + extension  #On crée l'url de téléchargement de l'image
 
-            if (mangaList[mangaNum][0] == "Love_X_Dilemma"
-                    and int(chapitre) > 154):
-                imageUrl = url + chapitre + suf[
-                    chapitre] + lang + "/" + image + extension
 
             if (len(image) < 2):
                 image = "0" + image

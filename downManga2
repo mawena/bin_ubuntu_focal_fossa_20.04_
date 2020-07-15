@@ -4,13 +4,12 @@ connection_pool = urllib3.PoolManager()
 from mangaManagement.management import *
 from mangaManagement.download import *
 
-directory = pathlib.Path(__file__).parent
-print(directory)
+directory = str(pathlib.Path(__file__).parent)
 
 # Definitions de quelques variables
 scansPath, imagesType = str(directory)+"/", "jpg"
 mdFilesList = [
-    str(directory)+"/.mangadown/mangakakalotDown.md"
+    directory+"/.mangadown/mangakakalotDown.md"
 ]
 sitesNameList = [
     getImagesLinksMangakakalot,
