@@ -15,17 +15,17 @@ $undesirables=array("1080" => "", "_" => " ", "(1) " => "", " (Clip Officiel) " 
 
 //Traitement des paramètres du script
 if($argc == 1){
-    $path_array =[$new_path];
+	$path_array =[$new_path];
 }
 elseif($argc > 1){
-    for($i=0; $i<$argc-1; $i++){
-        $path_array[$i] = $filesManager->slasher($argv[$i+1]);
-    }
+	for($i=0; $i<$argc-1; $i++){
+		$path_array[$i] = $filesManager->slasher($argv[$i+1]);
+	}
 }
 
 //Lancement des séquences
 foreach($path_array as $path){
-    $filesManager->fileFame($path, $extentions, $undesirables, $managerVideos->getAllArtistes());
-    $artistes = $filesManager->tree2($path, $extentions);
-    $filesManager->upload($artistes, $managerVideos, $path, $pathSave);
+	$filesManager->fileFame($path, $extentions, $undesirables, $managerVideos->getAllArtistes());
+	$artistes = $filesManager->tree2($path, $extentions);
+	$filesManager->upload($artistes, $managerVideos, $path, $pathSave);
 }

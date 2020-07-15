@@ -13,13 +13,13 @@ $managers = new Managers('PDO', PDOFactory::getMysqlConnexion());
 $managerVideos = $managers->getManagerOf('Videos');
 
 if($argc == 1){
-    $path_array =[$new_path];
+	$path_array =[$new_path];
 }
 elseif($argc > 1){
-    for($i=0; $i<$argc-1; $i++){
-        $path_array[$i] = $filesManager->slasher($argv[$i+1]);
-    }
+	for($i=0; $i<$argc-1; $i++){
+		$path_array[$i] = $filesManager->slasher($argv[$i+1]);
+	}
 }
 foreach($path_array as $path){
-    $filesManager->fileFame($path, $extentions, $undesirables, $managerVideos->getAllArtistes());
+	$filesManager->fileFame($path, $extentions, $undesirables, $managerVideos->getAllArtistes());
 }

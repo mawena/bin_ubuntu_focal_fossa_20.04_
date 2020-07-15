@@ -1,0 +1,38 @@
+#!/bin/python3
+import urllib3, os, re
+connection_pool=urllib3.PoolManager()
+from mangaManagement.management import *
+from mangaManagement.download import *
+
+# Definitions de quelques variables
+scansPath, imagesType ="/media/mawena/Files/Files/Documents/Divertissements/scan/", "jpg"
+mangaList = getMangaList("/home/mawena/bin/.mangadown/mangakakalotDown.md", scansPath, imagesType) #On récupère le liste des mangas et leurs infos
+mangaNum = getMangaNum(mangaList) #On récupère le numéro du manga à télécharger
+Name,url,scanPath = mangaList[mangaNum]	#Definition de variable après lecture des informations
+nbreZero = 1
+
+#Gestion des erreurs de dossier:
+creatDir(scansPath+Name)
+creatDir(scansPath+Name+"/"+imagesType)
+
+
+#Traitement des données et lancement des téléchargements:
+for chapitre, more in getChapterVars(Name):
+	#Gestion du dossier de chapitre:
+	creatDir(scanPath+more+chapitre)
+
+	HTMLPage = getHTMLPage(url+chapitre)
+
+	for imageUrl in getImagesLinksMangakakalot(HTMLPage):
+		#Gestion des images en local
+		imageName = (imageUrl.split("/"))[-1]
+		extension = (imageName.split("."))[-1]
+		imageNameNum = imageName.replace("."+extension, "")
+		if(len(imageNameNum) <= nbreZero):
+			for temp in range(0, nbreZero-(len(imageNameNum) - 1)):
+				imageNameNum = "0"+imageNameNum
+			imageName = imageNameNum+"."+extension
+		imagePath=scanPath+more+chapitre+"/Chap"+chapitre+"_"+imageName  #On crée le chemin de sauvegarde de l'image
+		
+		#Téléchargements
+		downloadImage(imageUrl, imagePath)
