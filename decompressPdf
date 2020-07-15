@@ -1,0 +1,27 @@
+#!/bin/python3
+import os, sys, mangaManagement
+from mangaManagement.management import *
+os.system("clear")
+mangaList=[]
+fileExtension = "pdf"
+scansPath = "/media/mawena/Files/Files/Documents/Divertissements/scan/"
+mangaList = getMangaListLocal(["/media/mawena/Files/Files/Documents/Divertissements/scan/"],"pdf", "jpg")
+
+
+if(len(mangaList)>0):
+	mangaNumList = getMangaNumList(mangaList)
+	for mangaNum in mangaNumList:	#Boucle de compréssion des images
+		mangaNum = int(mangaNum)-1
+		name, savePath, imagesPath, prefixe = (mangaList[mangaNum])
+		pdfPath = scansPath+name+"/"+fileExtension+"/"
+
+		for pdfFile in os.listdir(pdfPath):
+			if(pdfFile.__contains__("."+fileExtension)):
+				pdfNum = (((pdfFile.split("."+fileExtension))[0]).split(prefixe))[1]
+				os.makedirs("{0}{1}".format(imagesPath, pdfNum), exist_ok=True)
+				if (len(os.listdir(imagesPath+pdfNum+"/")) == 0):
+					print(getOkGreen("{0}{2} D=> {3}{1}/".format(pdfPath, pdfNum, pdfFile, imagesPath)))
+					os.system("pdfimages -j {0}{2} {3}{1}/".format(pdfPath, pdfNum, pdfFile, imagesPath))
+		rmItems(pdfPath, ".pdf")
+else:
+	print(getWarning("Il n'y a pas d'images à convertir"))

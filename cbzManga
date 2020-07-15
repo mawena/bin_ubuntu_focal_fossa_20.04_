@@ -1,0 +1,38 @@
+#!/bin/python3
+import urllib.request, os.path
+from mangaManagement.management import *
+mangaList = []
+scanPathList = [
+    "/media/mawena/Files/Files/Documents/Divertissements/scan/",
+    "/home/mawena/Téléchargements/.p/Scan/"
+]
+os.system("clear")
+mangaList = getMangaListLocal(scanPathList, "jpg", "cbz")
+unRenameList = ["TOME", "Images"]
+
+if (len(mangaList) > 0):
+    mangaNumList = getMangaNumList(mangaList)
+    #3-Compréssion des images:
+    for mangaNum in mangaNumList:  #Boucle de compréssion des images
+        mangaNum = int(mangaNum) - 1
+        name, imagePath, cbzPath, cbzName = mangaList[
+            mangaNum]  #Definition des variables après lecture des informations
+        chapitreList, temp = os.listdir(imagePath), cbzName
+        for chapitre in chapitreList:
+            if (containsListWords(
+                    chapitre.upper(),
+                    unRenameList)):  #Si le name dossier est un tome
+                cbzName = ""
+            else:
+                cbzName = temp
+            os.system("clear")
+            if os.path.exists(cbzPath) == False:
+                os.makedirs(cbzPath)  #On crée le dossier de destination du cbz
+                print(getHeader("Etape1: Compréssions:\nCréation du dossier" + cbzPath))
+            print(getWarning("Chapitre {0}".format(chapitre)))
+            os.system("zip -r9j '" + cbzPath + cbzName + chapitre + ".cbz' '" +
+                      imagePath + chapitre + "/'*")
+    rmMangasImages(mangaList, mangaNumList)
+else:
+    print(getWarning("Il n'y a aucun manga à convertir"))
+#BYMawena
