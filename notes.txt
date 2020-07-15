@@ -1,0 +1,1 @@
+J'ai déplacé le dossier des fichiers de la librairie mangaManagement vers le dossier /usr/lib/python3/dist-package/
