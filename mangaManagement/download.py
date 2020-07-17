@@ -3,14 +3,11 @@ import urllib3, os, re, requests
 from requests_html import HTMLSession
 connection_pool = urllib3.PoolManager()
 from mangaManagement.management import *
-
 def downloadImage(imageLink, imagePath):
     if os.path.exists(imagePath):  #Si le fichier existe déja
         print(getWarning("[" + imagePath + "] existe déja"))
-    else:
-        headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0"}
-        cookies = {"content_server": "server2"}
-        resp = requests.get(imageLink, headers=headers, cookies=cookies)
+    else:   
+        resp = requests.get(imageLink)
         if (resp.status_code == 200):
             f = open(imagePath, "wb")
             f.write(resp.content)

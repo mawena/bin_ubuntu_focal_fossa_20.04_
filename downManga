@@ -50,7 +50,6 @@ for chapitre, more in getChapterVars(Name):
 
             imageUrl = url + chapitre + lang + "/" + image + extension  #On crée l'url de téléchargement de l'image
 
-
             if (len(image) < 2):
                 image = "0" + image
             imagePath = scanPath + more + chapitre + lang + "/Chap" + chapitre + "_" + image + extension  #On crée le chemin de sauvegarde de l'image

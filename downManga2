@@ -5,11 +5,13 @@ from mangaManagement.management import *
 from mangaManagement.download import *
 
 directory = str(pathlib.Path(__file__).parent)
-
+creatDir(directory+"/scan/")
 # Definitions de quelques variables
-scansPath, imagesType = str(directory)+"/", "jpg"
+scansPath, imagesType = str(directory)+"/scan/", "jpg"
 mdFilesList = [
-    directory+"/.mangadown/mangakakalotDown.md"
+    directory+"/.mangadown/lelscan_vf.md",
+    directory+"/.mangadown/mangakakalotDown.md",
+    directory+"/.mangadown/manganeloDown.md",
 ]
 sitesNameList = [
     getImagesLinksMangakakalot,
